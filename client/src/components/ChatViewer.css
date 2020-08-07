@@ -1,0 +1,41 @@
+.chatviewer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  height: 70vh;
+}
+
+.chatviewer .activeUsersInfo{
+    color: mediumseagreen
+}
+
+.chatviewer > ul {
+  width: 50%;
+  box-sizing: border-box;
+  border: 1px solid lightgray;
+  border-radius: 0.25rem;
+  height: 50%;
+  display: block;
+  overflow: auto;
+  padding: 1rem 1rem;
+  overflow-wrap: break-word;
+}
+
+.chatviewer form {
+  text-align: start;
+  width: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  display: flex;
+  align-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.chatviewer input[type="text"] {
+  display: inline-block;
+  flex: 1 0 auto;
+  margin-right: 10px;
+}

@@ -1,0 +1,9 @@
+export const GET_LAST_MESSAGES = "GET_LAST_MESSAGES";
+export const RECEIVE_MESSAGE = "RECEIVE_MESSAGE";
+
+export const GET_ACTIVE_USERS = "GET_ACTIVE_USERS";
+export const ADD_USER_ACTIVE = "ADD_USER_ACTIVE";
+export const REMOVE_USER_ACTIVE = "REMOVE_USER_ACTIVE";
+
+export const SET_USER_NAME = "SET_USER_NAME";
+export const SET_ROOM = "SET_ROOM";

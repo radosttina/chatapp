@@ -1,0 +1,8 @@
+node_modules/
+
+TODOS.txt
+.env
+ 
+
+public/main.js
+public/node_modules

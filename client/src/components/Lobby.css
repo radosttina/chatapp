@@ -1,0 +1,30 @@
+.loginForm {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: [label] auto [input] 1fr;
+  width: 25%;
+  margin: 5rem auto;
+}
+
+.loginForm > input[type="text"] {
+  grid-column: input;
+  align-self: center;
+  border: 1px solid lightgray;
+  border-radius: 0.25rem;
+}
+
+.loginForm > input[type="submit"] {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.loginForm > label {
+  grid-column: label;
+  align-self: center;
+}
+
+@media screen and (max-width:600px) {
+    .loginForm{
+        width: 80%
+    }
+}
