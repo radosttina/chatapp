@@ -84,13 +84,8 @@ router.get("/getUsersInRoom", async (req, res) => {
       name: roomName,
     });
 
-    room.
-      catch(err => {
-        res.status(400).json("ERROR")
-      })
-
     const usersInRoom = room ? room.activeUsers : [];
-    res.status(200).json(usersInRoom);
+    res.status(200).json(usersInRoom.map(user => user.name));
   } catch (err) {
     res.status(400).json({
       message: "Failed to retrieve the active users.",

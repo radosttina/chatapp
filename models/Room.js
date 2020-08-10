@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./User');
 
 const RoomSchema = mongoose.Schema({
     name: {
@@ -6,7 +7,7 @@ const RoomSchema = mongoose.Schema({
         required: true,
         maxlength: 64
     },
-    activeUsers: [{type: String}]
+    activeUsers: [User.schema]
 })
 
 module.exports = mongoose.model('Room', RoomSchema);

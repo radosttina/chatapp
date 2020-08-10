@@ -11,7 +11,6 @@ async function saveMessage(user, msg, room) {
     .then((data) => {
       return data;
     }, (err) => {
-      console.log('Cannot save message')
       throw new Error();
     })
 }

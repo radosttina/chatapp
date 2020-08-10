@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
+const User = require("./models/User");
 const http = require("http");
 const bodyParser = require("body-parser");
 const socketio = require("socket.io");
@@ -11,6 +12,8 @@ const {
   addUserToRoom,
   removeUserFromRoom,
 } = require("./utils/rooms");
+
+const { connectUser, disconnectUser } = require("./utils/users");
 require("dotenv/config");
 
 const app = express();
@@ -23,48 +26,35 @@ const postsRoute = require("./routes/chat");
 app.use("/", postsRoute);
 app.use(express.static(path.join(__dirname, "client/public")));
 
-mongoose.set('bufferCommands', false);
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true })
-  .catch((err) => console.log("Could not connect to db!!!"))
+mongoose.set("bufferCommands", false);
+mongoose
+  .connect(process.env.DB_CONNECTION, { useNewUrlParser: true })
+  .catch((err) => console.log("Could not connect to db!!!"));
 
 const botName = "VioChat";
 
 io.on("connection", (socket) => {
-  console.log("Connected!")
+  console.log("Connected!");
   socket.emit("message", {
     user: botName,
     msg: "Welcome to VioChat!",
   });
 
   socket.on("joinRoom", async ({ username, room }) => {
-    socket.join(room);
+    const userInstance = new User({ _id: socket.id, name: username });
 
-    saveRoom(room)
-      .then((data) => {
-        console.log("Saved room:", data);
-      })
+    Promise.all([
+      saveRoom(room), 
+      userInstance.save()
+    ])
+      .then(([roomInstance, user]) => connectUser(io, socket, room, botName, user))
       .catch((err) => {
-        console.log("Cannot save room");
+        res.status(500).json("The app cannot connect you to the chat room!");
       });
 
-    addUserToRoom(room, username)
-      .catch(err => console.log("User not added to active chat users."));
-
-    io.in(room).emit("userJoined", username);
-
-    socket.to(room).emit("message", {
-      user: botName,
-      msg: `${username} joined ${room}`,
-    });
 
     socket.on("disconnect", () => {
-       
-      io.to(room).emit("userLeft", username);
-
-      socket.in(room).emit("message", {
-        user: botName,
-        msg: `${username} has left ${room}`,
-      });
+      disconnectUser(io, socket, room, botName, userInstance);
     });
 
     socket.on("chatMessage", (msg) => {
@@ -72,7 +62,7 @@ io.on("connection", (socket) => {
         user: username,
         msg: msg,
       });
-      saveMessage(username, msg, room)
+      saveMessage(username, msg, room);
     });
   });
 });

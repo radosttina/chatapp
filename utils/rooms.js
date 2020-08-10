@@ -6,10 +6,10 @@ async function checkIfRoomExists(roomName) {
 }
 
 async function saveRoom(room) {
-  const roomCount = await Room.countDocuments({ name: room })
+  const chatRoom = await Room.findOne({ name: room })
 
-  if (roomCount > 0) {
-    throw Error('Room already exists.')
+  if (chatRoom) {
+    return chatRoom;
   }
 
   const newRoom =  new Room({
@@ -26,17 +26,19 @@ async function saveRoom(room) {
     });
 }
 
-async function addUserToRoom(roomName, username) {
-    return await Room.update(
+async function addUserToRoom(roomName, user) {
+    await Room.update(
         { name: roomName }, 
-        { $push: { activeUsers: username } }
+        { $push: { activeUsers: user } }
     )
+
+    return user
 }
 
-async function removeUserFromRoom(roomName, username) {
+async function removeUserFromRoom(roomName, userId) {
     return await Room.update(
         { name: roomName }, 
-        { $pull: { activeUsers: username } }
+        { $pull: { activeUsers: {_id: userId} } }
     )
 }
 
